@@ -12,6 +12,22 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Navigate Products via Filters', () => {
 
-  // TODO: implement tests
+  test.beforeAll(async ({ browser }) => {
+    // Setup if needed
+  });
+
+  test('Test filter products and verify results', async ({ page }) => {
+    await page.goto('https://www.kriso.ee/');
+    await page.getByRole('button', { name: 'Nõustun' }).click();
+
+    // Perform search
+    await page.getByRole('textbox', { name: 'Pealkiri, autor, ISBN, märksõna' }).click();
+    await page.getByRole('textbox', { name: 'Pealkiri, autor, ISBN, märksõna' }).fill('tolkien');
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    // Verify results
+    const resultsCount = await page.locator('.sb-results-total').first().textContent();
+    expect(resultsCount).toBeTruthy();
+  });
 
 });
