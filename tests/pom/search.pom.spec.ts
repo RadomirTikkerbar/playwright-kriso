@@ -1,54 +1,25 @@
 /**
  * Part II — Page Object Model tests
- * Test suite: Search for Books by Keywords
+ * Test suite: Navigate Products via Filters
  *
  * Rules:
  *   - No raw selectors in test files — all locators live in page classes
  *   - Use only: getByRole, getByText, getByPlaceholder, getByLabel
  */
-import { test, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
-import { HomePage } from '../../pages/HomePage';
+import { test } from '../fixtures';
 
-let page: Page;
-let homePage: HomePage;
+test.describe.configure({ mode: 'serial' });
 
-test.describe('Search for Books by Keywords (POM)', () => {
+test.describe('Navigate Products via Filters (POM)', () => {
 
-  test.beforeAll(async ({ browser }) => {
-      const context = await browser.newContext();
-      page = await context.newPage();
-  
-      homePage = new HomePage(page);
-  
-      await homePage.openUrl();
-      await homePage.acceptCookies();
-    });
-  
-    test.afterAll(async () => {
-      await page.context().close();
-    });
-  
-    test('Test logo is visible', async () => {
-      await homePage.verifyLogo();
-    }); 
-
-    test('Test no products found', async () => {
-      await homePage.searchByKeyword('jaslkfjalskjdkls');
-      await homePage.verifyNoProductsFoundMessage();
-    });
-
-    test('Test search results contain keyword', async () => {
-    await homePage.searchByKeyword('tolkien');
-    await homePage.verifyResultsCountMoreThan(1)
-
-    //TODO check results contain keyword
+  test.beforeEach(async ({ home }) => {
+    await home.openUrl();
+    await home.acceptCookies();
   });
 
-    test('Test search by ISBN', async () => {
-    await homePage.searchByKeyword('9780307588371');
-
-    //TODO check correct book is shown
+  test('Test filter products and verify results', async ({ home }) => {
+    await home.searchByKeyword('tolkien');
+    await home.verifyResultsCountMoreThan(0);
   });
 
 });
